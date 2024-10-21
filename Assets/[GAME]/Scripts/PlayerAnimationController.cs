@@ -13,14 +13,14 @@ namespace _GAME_.Scripts
         private static readonly int Shoot = Animator.StringToHash("Shoot");
 
         private PlayerBrain _playerBrain;
-        private Targeting<EnemyHealth> _targeting;
+        private Targeting<Damageable> _targeting;
         private Animator _playerAnimator;
         private Rigidbody _playerRigidbody;
         private PhysicsBasedCharacterController _playerController;
         private PlayerStacker _playerStacker;
         private void Awake()
         {
-            _targeting = GetComponent<Targeting<EnemyHealth>>();
+            _targeting = GetComponent<Targeting<Damageable>>();
             _playerAnimator = GetComponentInChildren<Animator>();
             _playerRigidbody = GetComponent<Rigidbody>();
             _playerController = GetComponent<PhysicsBasedCharacterController>();

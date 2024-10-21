@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Cysharp.Threading.Tasks;
@@ -20,27 +18,18 @@ namespace _GAME_.Scripts.Gun
         GrenadeLauncher = 6,
         Melee = 7,
     }
-    
-    public class Gun : MonoBehaviour
+
+    public class Gun : Damager
     {
-        public Action OnFireBullet;
-        
-        [BoxGroup("Generally")]
-        public InventoryItem inventoryItem;
         [BoxGroup("Generally")]
         public ParticleSystem muzzleFlash;
-        [BoxGroup("Generally")]
-        public WeaponType weaponType;
-        
         public Transform firePoint;
         public Magazine magazine;
         public GunBarrel gunBarrel;
-        public WeaponLevel weaponLevel;
-        public delegate bool CanAttack();
-        public List<CanAttack> canAttack = new List<CanAttack>();
         
         private void OnDrawGizmos()
         {
+            if(firePoint == null) return;
             Gizmos.color = Color.red;
             Gizmos.DrawSphere(firePoint.position, 0.025f);
         }
@@ -52,7 +41,7 @@ namespace _GAME_.Scripts.Gun
         }
         
         private bool _isFiring;
-        private async UniTaskVoid SpawnBullets()
+        protected virtual async UniTask SpawnBullets()
         {
             _isFiring = true;
             var bulletCount = gunBarrel.perShootingBulletCount;
@@ -77,16 +66,22 @@ namespace _GAME_.Scripts.Gun
             
             _isFiring = false;
         }
+        
+        private bool IsFar(Transform target)
+        {
+            return Vector3.Distance(firePoint.position, target.position) > gunBarrel.range;
+        }
 
-        public virtual void Fire()
+        public override async UniTask Fire(Damageable target)
         {
             if(_isFiring) return;
             if(!magazine.HaveBullet()) return;
             if(canAttack.Count > 0)
                 if(!canAttack.All(x => x()))
                     return;
-            
-            SpawnBullets().Forget();
+            if(IsFar(target.transform)) return;
+
+            await SpawnBullets();
  
             if (weaponLevel.waitPerFireBullet == 0)
             {

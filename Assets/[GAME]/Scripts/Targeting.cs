@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
@@ -24,34 +25,31 @@ namespace _GAME_.Scripts
         {
             var results = new Collider[10];
             var size = Physics.OverlapSphereNonAlloc(transform.position, viewRange, results, targetLayer);
+    
+            if (NoFindAnything(size)) return;
 
-            if (size == 0)
+            if (TargetSelector(OrderTargets(results))) return;
+            
+            if (HaveTarget()) return;
+
+            currentTarget = null;
+        }
+        bool HaveTarget()
+        {
+
+            if (currentTarget != null) //Eğer target varsa 
             {
-                if (currentTarget == null) return;
-                
-                if (Vector3.Distance(currentTarget.transform.position, transform.position) < exitViewRange)
+                var currentTargetTransform = currentTarget.transform;
+                if (!CheckBlock(currentTargetTransform))
                 {
-                    if (CheckBlock(currentTarget.transform))
-                    {
-                        currentTarget = null;
-                        return;
-                    }
+                    if (Vector3.Distance(currentTargetTransform.position, currentTarget.transform.position) < exitViewRange)
+                        return true;
                 }
-                else
-                {
-                    currentTarget = null;
-                    return;
-                }
-
-                return;
             }
-
-            var sortedList = results
-                .Where(damageable => damageable != null)
-                .OrderBy(damageable => Vector3.Distance(transform.position, damageable.transform.position))
-                .Select(x => x.GetComponent<T>()).ToList();
-
-
+            return false;
+        }
+        protected virtual bool TargetSelector(List<T> sortedList)
+        {
             foreach (var iDamageable in sortedList)
             {
                 if (iDamageable == null) continue;
@@ -63,35 +61,53 @@ namespace _GAME_.Scripts
                 if (IsTargetInDangerousRange(distance))
                 {
                     currentTarget = iDamageable;
-                    return;
+                    return true;
                 }
 
                 if (IsTargetInViewAngle(iDamageable))
                 {
                     currentTarget = iDamageable;
-                    return;
+                    return true;
                 }
 
                 if (currentTarget == null)
                 {
                     currentTarget = iDamageable;
-                    return;
+                    return true;
                 }
             }
-
-            if (currentTarget != null) //Eğer target varsa 
-            {
-                var currentTargetTransform = currentTarget.transform;
-                if (!CheckBlock(currentTargetTransform))
-                {
-                    if (Vector3.Distance(currentTargetTransform.position,currentTarget.transform.position) < exitViewRange)
-                        return;
-                }
-            }
-
-            currentTarget = null;
+            return false;
         }
-        
+        protected virtual List<T> OrderTargets(Collider[] results)
+        {
+            return results
+                .Where(damageable => damageable != null)
+                .OrderBy(damageable => Vector3.Distance(transform.position, damageable.transform.position)).Select(
+                    damageable => damageable.GetComponent<T>()).ToList();
+            
+        }
+        protected virtual bool NoFindAnything(int size)
+        {
+            if (size != 0) return false;
+            if (currentTarget == null) return true;
+
+            if (Vector3.Distance(currentTarget.transform.position, transform.position) < exitViewRange)
+            {
+                if (CheckBlock(currentTarget.transform))
+                {
+                    currentTarget = null;
+                    return true;
+                }
+            }
+            else
+            {
+                currentTarget = null;
+                return true;
+            }
+
+            return true;
+        }
+
         private bool IsTargetInViewAngle(T iDamageable)
         {
             var direction = iDamageable.transform.position - transform.position;
@@ -113,6 +129,7 @@ namespace _GAME_.Scripts
             return size > 0;
         }
 
+        #if UNITY_EDITOR
         private void OnDrawGizmosSelected()
         {
             Handles.color = Color.blue;
@@ -137,5 +154,6 @@ namespace _GAME_.Scripts
                 Gizmos.DrawLine(transform.position, currentTarget.transform.position);
             }
         }
+  #endif
     }
 }

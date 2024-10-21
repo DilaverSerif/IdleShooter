@@ -18,10 +18,8 @@ namespace _GAME_.Scripts
         {
             base.OnLogic();
             
-            if (_playerBrain.Inventory.PlayerEquipment.CurrentGun)
-            {
-                _playerBrain.Inventory.PlayerEquipment.CurrentGun.Fire();
-            }
+            if (_playerBrain.Inventory.PlayerEquipment.currentGun)
+                _playerBrain.Inventory.PlayerEquipment.currentGun.Fire(_playerBrain.Targeting.currentTarget);
         }
     }
 }

@@ -33,13 +33,13 @@ namespace _GAME_.Scripts
             }
         }
         private StateMachine<EPlayerState,PlayerBrain> _stateMachine;
-        internal Targeting<EnemyHealth> Targeting;
+        internal Targeting<Damageable> Targeting;
         internal PhysicsBasedCharacterController CharacterController;
         internal PlayerInventory Inventory;
         private void Awake()
         {
             CharacterController = GetComponent<PhysicsBasedCharacterController>();
-            Targeting = GetComponent<Targeting<EnemyHealth>>();
+            Targeting = GetComponent<Targeting<Damageable>>();
             Inventory = GetComponent<PlayerInventory>();
             
             _stateMachine = new StateMachine<EPlayerState,PlayerBrain>();
@@ -47,6 +47,8 @@ namespace _GAME_.Scripts
             var walkState = new WalkState(this);
             var targetMoveState = new TargetMoveState(this);
             var targetIdleState = new TargetIdleState(this);
+            
+            var cutIdleState = new LootIdleState(this);
             
             _stateMachine.AddState(EPlayerState.Idle, idleState);
             _stateMachine.AddState(EPlayerState.Move, walkState);

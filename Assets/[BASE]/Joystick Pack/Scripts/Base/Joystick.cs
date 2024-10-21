@@ -157,6 +157,12 @@ namespace _BASE_.Joystick_Pack.Scripts.Base
             }
             return Vector2.zero;
         }
+        
+        public float DistanceJoyStick()
+        {
+            var distance = Mathf.Sqrt(Mathf.Abs((input.x * input.x) + (input.y *input.y)));
+            return distance;
+        }
     }
 
     public enum AxisOptions { Both, Horizontal, Vertical }

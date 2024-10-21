@@ -1,41 +1,43 @@
 using System;
 using _GAME_.Scripts.Gun;
+using UnityEngine.Serialization;
 using Object = UnityEngine.Object;
 
 namespace _GAME_.Scripts
 {
+    [Serializable]
     public class PlayerEquipment
     {
-        public Gun.Gun CurrentGun;
+        public Gun.Gun currentGun;
         public static Action<Gun.Gun> OnGunEquipped;
         public InventoryItem lastGun;
         
         public void EquipGun(Gun.Gun gun)
         {
-            if (CurrentGun != null)
+            if (currentGun != null)
             {
-                CurrentGun.OnFireBullet = null;
-                lastGun = CurrentGun.inventoryItem;
+                currentGun.OnFireBullet = null;
+                lastGun = currentGun.inventoryItem;
             }
-            CurrentGun = gun;
+            currentGun = gun;
             
             OnGunEquipped?.Invoke(gun);
         }
         
         public void EquipGun(InventoryItem gun)
         {
-            if (CurrentGun != null)
-                lastGun = CurrentGun.inventoryItem;
+            if (currentGun != null)
+                lastGun = currentGun.inventoryItem;
 
-            CurrentGun = Object.Instantiate(InventoryData.Instance.GetGun(gun));
+            currentGun = Object.Instantiate(InventoryData.Instance.GetGun(gun));
             
-            OnGunEquipped?.Invoke(CurrentGun);
+            OnGunEquipped?.Invoke(currentGun);
         }
         
         public void UnequipGun()
         {
-            lastGun = CurrentGun.inventoryItem;
-            CurrentGun = null;
+            lastGun = currentGun.inventoryItem;
+            currentGun = null;
         }
     }
 }

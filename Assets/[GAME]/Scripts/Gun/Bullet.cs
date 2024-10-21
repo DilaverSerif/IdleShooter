@@ -10,6 +10,7 @@ public abstract class Bullet<T> : BulletBase
 
 public abstract class BulletBase : MonoBehaviour
 {
+    public int damage;
     public InventoryItem bulletType;
     protected Rigidbody Rigidbody;
     protected Collider BaseCollider;
@@ -25,14 +26,12 @@ public abstract class BulletBase : MonoBehaviour
     {
         return Random.Range(bulletLifeTimeMinMax.x, bulletLifeTimeMinMax.y);
     }
-
-    public int damage;
-
+    
     protected virtual void Awake()
     {
         Rigidbody = GetComponent<Rigidbody>();
         BaseCollider = GetComponent<Collider>();
     }
     
-    public abstract void Fire(int extraDamage = 0);
+    public abstract void Fire(float extraDamage = 0);
 }

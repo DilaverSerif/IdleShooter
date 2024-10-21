@@ -11,7 +11,7 @@ namespace _GAME_.Scripts
         public override void OnEnter()
         {
             base.OnEnter();
-            _playerBrain.CharacterController.SetLookDirection(PhysicsBasedCharacterController.lookDirectionOptions.velocity);
+            //_playerBrain.CharacterController.SetLookDirection(PhysicsBasedCharacterController.lookDirectionOptions.velocity);
         }
     }
 }
