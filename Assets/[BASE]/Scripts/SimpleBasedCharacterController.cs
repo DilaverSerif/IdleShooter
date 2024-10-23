@@ -4,14 +4,16 @@ namespace _BASE_.Scripts
 {
     public class SimpleBasedCharacterController : MonoBehaviour
     {
-        private CharacterController _characterController;
-        private Vector3 _targetPos;
-        public float maxSpeed;
+        public float acceleration;
+        public float deceleration;
         public float gravity = -9.8f;
         public float rotationSpeed = 10f;
+        
+        private Rigidbody _characterController;
+        private Vector3 _targetPos;
         void Awake()
         {
-            _characterController = GetComponent<CharacterController>();
+            _characterController = GetComponent<Rigidbody>();
         }
 
         private void FixedUpdate()
@@ -22,22 +24,27 @@ namespace _BASE_.Scripts
                 Locomotion();
         }
 
+        private float Gravity()
+        {
+            return gravity * Time.deltaTime;
+        }
+
         private void JoyStickMove()
         {
             var direction = Joystick.Instance.Direction;
             var distance = Joystick.Instance.DistanceJoyStick();
             
-            SetRotation(Joystick.Instance.Direction);
+            SetRotation(direction);
 
-            _targetPos = transform.forward * (Joystick.Instance.DistanceJoyStick() * maxSpeed * Time.deltaTime);
-            _targetPos.y = gravity * Time.deltaTime;
-            _characterController.Move(_targetPos);
+            _targetPos = transform.forward * (distance * acceleration * Time.deltaTime);
+            _targetPos.y = Gravity();
+            _characterController.velocity = _targetPos;
         }
         
         private void Locomotion()
         {
-            _targetPos = Vector3.Lerp(_targetPos, Vector3.zero, Time.deltaTime * maxSpeed);
-            _characterController.Move(_targetPos);
+            _targetPos = Vector3.Lerp(_targetPos, Vector3.zero, Time.deltaTime * deceleration);
+            _characterController.velocity = _targetPos;
         }
 
         private void SetRotation(Vector3 move)
@@ -46,25 +53,8 @@ namespace _BASE_.Scripts
             
             var transformRotation = transform.rotation;
             var targetRotation = Quaternion.Euler(0f, angleA, 0f);
-            var shortestRotation = ShortestRotation(transformRotation, targetRotation);
             transform.rotation = Quaternion.Lerp(transformRotation, targetRotation, Time.deltaTime * rotationSpeed);
         }
-        
-        public static Quaternion ShortestRotation(Quaternion a, Quaternion b)
-        {
-            if (Quaternion.Dot(a, b) < 0)
-            {
-                return a * Quaternion.Inverse(Multiply(b, -1));
-            }
-
-            else return a * Quaternion.Inverse(b);
-        }
-        
-        public static Quaternion Multiply(Quaternion input, float scalar)
-        {
-            return new Quaternion(input.x * scalar, input.y * scalar, input.z * scalar, input.w * scalar);
-        }
-
     }
 }
 

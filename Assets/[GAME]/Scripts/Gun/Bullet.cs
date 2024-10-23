@@ -1,37 +1,49 @@
-using _GAME_.Scripts.Gun;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-[RequireComponent(typeof(Rigidbody))]
-public abstract class Bullet<T> : BulletBase
+namespace _GAME_.Scripts.Gun
 {
-    protected T CurrentTarget;
-}
-
-public abstract class BulletBase : MonoBehaviour
-{
-    public int damage;
-    public InventoryItem bulletType;
-    protected Rigidbody Rigidbody;
-    protected Collider BaseCollider;
-    public Vector2 bulletRangeMinMax;
-    public Vector2 bulletLifeTimeMinMax;
-
-    protected float BulletRange()
+    [RequireComponent(typeof(Rigidbody))]
+    public abstract class Bullet<T> : BulletBase
     {
-        return Random.Range(bulletRangeMinMax.x, bulletRangeMinMax.y);
+        protected T CurrentTarget;
     }
 
-    protected float BulletLifeTime()
+    public abstract class BulletBase : MonoBehaviour
     {
-        return Random.Range(bulletLifeTimeMinMax.x, bulletLifeTimeMinMax.y);
-    }
+        public int damage;
+        public InventoryItem inventoryItem;
+        public Vector2 bulletRangeMinMax;
+        public Vector2 bulletLifeTimeMinMax;
     
-    protected virtual void Awake()
-    {
-        Rigidbody = GetComponent<Rigidbody>();
-        BaseCollider = GetComponent<Collider>();
-    }
+        protected Rigidbody Rigidbody;
+        protected Collider BaseCollider;
+        protected float BulletRange()
+        {
+            return Random.Range(bulletRangeMinMax.x, bulletRangeMinMax.y);
+        }
+
+        protected float BulletLifeTime()
+        {
+            return Random.Range(bulletLifeTimeMinMax.x, bulletLifeTimeMinMax.y);
+        }
     
-    public abstract void Fire(float extraDamage = 0);
+        protected virtual void Awake()
+        {
+            Rigidbody = GetComponent<Rigidbody>();
+            BaseCollider = GetComponent<Collider>();
+        }
+    
+        public abstract void Fire(float extraDamage = 0);
+
+        private void OnCollisionEnter(Collision other)
+        {
+            if (other.transform.TryGetComponent(out Damageable damageable))
+            {
+                damageable.TakeDamage(damage);
+                Destroy(gameObject);
+            }
+        }
+    
+    }
 }

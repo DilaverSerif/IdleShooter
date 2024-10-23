@@ -5,5 +5,8 @@ namespace _GAME_.Scripts.Gun
         Stick = 100,
         Pistol = 101,
         Rifle = 102,
+        
+        //Bullets
+        PistolBullet = 200,
     }
 }

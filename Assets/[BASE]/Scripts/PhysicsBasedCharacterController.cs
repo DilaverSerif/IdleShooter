@@ -129,6 +129,11 @@ namespace _BASE_.Scripts
                     lookDirection = _moveInput;
                     break;
                 case lookDirectionOptions.targetDirection:
+                    if(_playerBrain.Targeting.currentTarget == null)
+                    {
+                        lookDirection = Vector3.zero;
+                        break;
+                    }
                     lookDirection = (_playerBrain.Targeting.currentTarget.transform.position - transform.position).normalized;
                     break;
                 default:

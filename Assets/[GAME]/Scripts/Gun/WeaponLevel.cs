@@ -14,8 +14,6 @@ namespace _GAME_.Scripts.Gun
         
         [Header("Level"),BoxGroup("Weapon")]
         public int weaponLevel;
-        [BoxGroup("Weapon")]
-        public float waitPerFireBullet;
         [ShowInInspector]
         public float Damage => damageCurve.Evaluate(weaponLevel);
         [ShowInInspector]

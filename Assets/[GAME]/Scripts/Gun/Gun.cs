@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Threading;
 using Cysharp.Threading.Tasks;
@@ -18,15 +19,26 @@ namespace _GAME_.Scripts.Gun
         GrenadeLauncher = 6,
         Melee = 7,
     }
-
-    public class Gun : Damager
+    
+    public enum GunState
     {
-        [BoxGroup("Generally")]
-        public ParticleSystem muzzleFlash;
-        public Transform firePoint;
+        Idle = 0,
+        Fire = 1,
+        Reload = 2,
+    }
+
+    public sealed class Gun : Damager
+    {
         public Magazine magazine;
         public GunBarrel gunBarrel;
+        [BoxGroup("Generally")]
+        public ParticleSystem muzzleFlash;
+        [BoxGroup("Generally")]
+        public Transform firePoint;
+        [BoxGroup("Generally")]
+        public GunState gunState;
         
+        private CancellationTokenSource _autoFireToken;
         private void OnDrawGizmos()
         {
             if(firePoint == null) return;
@@ -36,14 +48,14 @@ namespace _GAME_.Scripts.Gun
 
         private void OnDrawGizmosSelected()
         {
+            if(firePoint == null) return;
             gunBarrel.OnGizmosSelected(firePoint);
             magazine.GizmosSelected(firePoint);
         }
         
-        private bool _isFiring;
-        protected virtual async UniTask SpawnBullets()
+        private async UniTask SpawnBullets(CancellationToken token = default)
         {
-            _isFiring = true;
+            gunState = GunState.Fire;
             var bulletCount = gunBarrel.perShootingBulletCount;
             var getBulletObject = gunBarrel.bullet;
             
@@ -53,18 +65,18 @@ namespace _GAME_.Scripts.Gun
             {
                 var spawnedBullet = Instantiate(getBulletObject, firePoint.position, forwards[i] * transform.rotation);
                 spawnedBullet.Fire(weaponLevel.Damage);
-                if(weaponLevel.waitPerFireBullet > 0)
-                    await UniTask.WaitForSeconds(weaponLevel.waitPerFireBullet);
-                if (!(weaponLevel.waitPerFireBullet > 0)) continue;
+                if(gunBarrel.waitPerFireBullet > 0)
+                    await UniTask.WaitForSeconds(gunBarrel.waitPerFireBullet, cancellationToken: token);
+                if (!(gunBarrel.waitPerFireBullet > 0)) continue;
                 
                 if(muzzleFlash)
                     muzzleFlash.Play();
-                OnFireBullet?.Invoke();
+                OnFireBullet?.Invoke(i);
             }
             
-            await UniTask.WaitForSeconds(weaponLevel.FireRate);
+            await UniTask.WaitForSeconds(weaponLevel.FireRate, cancellationToken: token);
             
-            _isFiring = false;
+            gunState = GunState.Idle;
         }
         
         private bool IsFar(Transform target)
@@ -72,22 +84,31 @@ namespace _GAME_.Scripts.Gun
             return Vector3.Distance(firePoint.position, target.position) > gunBarrel.range;
         }
 
-        public override async UniTask Fire(Damageable target)
+        private void OnEnable()
         {
-            if(_isFiring) return;
-            if(!magazine.HaveBullet()) return;
-            if(canAttack.Count > 0)
-                if(!canAttack.All(x => x()))
-                    return;
-            if(IsFar(target.transform)) return;
+            canAttack.Add(() => gunState == GunState.Idle);
+            canAttack.Add(() => magazine.HaveBullet());
+        }
 
-            await SpawnBullets();
- 
-            if (weaponLevel.waitPerFireBullet == 0)
+        private void OnDisable()
+        {
+            canAttack.Clear();
+            _autoFireToken?.Cancel();
+        }
+
+        public override async UniTask AutoFire(Damageable target)
+        {
+            _autoFireToken?.Cancel();
+            _autoFireToken = new CancellationTokenSource();
+            
+            while (_autoFireToken.Token.IsCancellationRequested == false)
             {
-                if(muzzleFlash)
-                    muzzleFlash.Play();
-                OnFireBullet?.Invoke();
+                if(canAttack.Count > 0)
+                    if(!canAttack.All(x => x()))
+                        return;
+                if(target && IsFar(target.transform)) return;
+
+                await SpawnBullets(_autoFireToken.Token);
             }
         }
 
@@ -112,6 +133,24 @@ namespace _GAME_.Scripts.Gun
         private void FindMuzzleFlash()
         {
             muzzleFlash = transform.FindChildObjectByName("MuzzleFlash").GetComponent<ParticleSystem>();
+        }
+
+        [Button]
+        private void TestFire()
+        {
+            if (Application.isPlaying)
+            {
+                SpawnBullets().Forget();
+            }
+        }
+        
+        [Button]
+        private void AutoTestFire()
+        {
+            if (Application.isPlaying)
+            {
+                AutoFire(null).Forget();
+            }
         }
 #endif
     }

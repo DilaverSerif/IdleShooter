@@ -11,6 +11,7 @@ namespace _GAME_.Scripts
         private static readonly int SideDir = Animator.StringToHash("SideDir");
         private static readonly int Target = Animator.StringToHash("Target");
         private static readonly int Shoot = Animator.StringToHash("Shoot");
+        private static readonly int ShootIndex = Animator.StringToHash("ShootIndex");
 
         private PlayerBrain _playerBrain;
         private Targeting<Damageable> _targeting;
@@ -41,7 +42,11 @@ namespace _GAME_.Scripts
 
         private void OnGunEquipped(Gun.Gun obj)
         {
-            obj.OnFireBullet += () => _playerAnimator.SetTrigger(Shoot);
+            obj.OnFireBullet += i =>
+            {
+                _playerAnimator.SetTrigger(Shoot);
+                _playerAnimator.SetInteger(ShootIndex, i);
+            };
         }
 
         private void OnPutStack()

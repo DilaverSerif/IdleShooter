@@ -19,7 +19,7 @@ namespace _GAME_.Scripts
             base.OnLogic();
             
             if (_playerBrain.Inventory.PlayerEquipment.currentGun)
-                _playerBrain.Inventory.PlayerEquipment.currentGun.Fire(_playerBrain.Targeting.currentTarget);
+                _playerBrain.Inventory.PlayerEquipment.currentGun.AutoFire(_playerBrain.Targeting.currentTarget);
         }
     }
 }

@@ -11,11 +11,11 @@ namespace _GAME_.Scripts.Gun
     [Serializable]
     public class GunBarrel
     {
-        public Transform _transform;
         // <summary>
         // The number of bullets fired per shooting.
         // </summary>
         public int perShootingBulletCount;
+        public float waitPerFireBullet;
         public BulletBase bullet;
         public GunBarrelFireType fireType;
     
@@ -27,8 +27,10 @@ namespace _GAME_.Scripts.Gun
         public float maxSpreadTime;
         public float increasePerShootSpread;
         public float range;
+        public float angle;
         [BoxGroup("Debug"),ShowInInspector]
         private float _currentSpread;
+
         private void ChangedAnimationCurve()
         {
             var x = spreadCurveX.keys.Last().value;
@@ -63,8 +65,8 @@ namespace _GAME_.Scripts.Gun
                     spreadCurveX.Evaluate(Random.Range(0, _currentSpread)),
                     spreadCurveY.Evaluate(Random.Range(0, _currentSpread))
                 );
-                Vector3 randomPoint = Random.insideUnitCircle * range;
-                randomPoint.z = 10;
+                Vector3 randomPoint = Random.insideUnitCircle * angle;
+                randomPoint.z = range;
                 //bulletRotations[i] = Quaternion.Euler(new Vector3(getOffset.y, getOffset.x, 0)) * Quaternion.LookRotation(randomPoint);
                 bulletRotations[i] = Quaternion.LookRotation(randomPoint) * Quaternion.Euler(new Vector3(
                     Random.Range(-getOffset.y,getOffset.y), 
@@ -75,7 +77,7 @@ namespace _GAME_.Scripts.Gun
         private void TriangleShoot(Quaternion[] bulletRotations)
         {
             var half = perShootingBulletCount / 2;
-            var anglePerBullet = range / half;
+            var anglePerBullet = angle / half;
 
             for (var i = -half; i <= half; i++)
             {
@@ -97,19 +99,19 @@ namespace _GAME_.Scripts.Gun
 #if UNITY_EDITOR
             if (fireType == GunBarrelFireType.Triangle)
             {
-                var direction = firePoint.forward * 10;
-                var rotatedDirection = Quaternion.AngleAxis(range, firePoint.up) * direction;
+                var direction = firePoint.forward * range;
+                var rotatedDirection = Quaternion.AngleAxis(angle, firePoint.up) * direction;
                 var rotatedLine = firePoint.position + rotatedDirection;
 
                 HandlesHelper.DrawLine(firePoint.position, rotatedLine, Color.white);
-                rotatedDirection = Quaternion.AngleAxis(range, -1 * firePoint.up) * direction;
+                rotatedDirection = Quaternion.AngleAxis(angle, -1 * firePoint.up) * direction;
                 rotatedLine = firePoint.position + rotatedDirection;
                 HandlesHelper.DrawLine(firePoint.position, rotatedLine, Color.white);
             }
         
             if (fireType == GunBarrelFireType.Sphere)
             {
-                Handles.DrawWireDisc(firePoint.position + firePoint.forward * 10, Vector3.back, range, 5);
+                Handles.DrawWireDisc(firePoint.position + firePoint.forward * range, Vector3.back, angle, 5);
             }
 #endif
         }
