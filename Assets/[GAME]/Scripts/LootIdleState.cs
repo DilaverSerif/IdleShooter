@@ -1,5 +1,6 @@
 using _BASE_.Scripts;
 using _GAME_.Scripts.Gun;
+using Cysharp.Threading.Tasks;
 namespace _GAME_.Scripts
 {
     public class LootIdleState: PlayerState
@@ -12,18 +13,9 @@ namespace _GAME_.Scripts
         {
             base.OnEnter();
             _playerBrain.CharacterController.SetLookDirection(PhysicsBasedCharacterController.lookDirectionOptions.targetDirection);
-            _playerBrain.Inventory.PlayerEquipment.EquipGun(InventoryItem.Stick);
-        }
-        
-        
-        public override void OnLogic()
-        {
-            base.OnLogic();
-            
+            _playerBrain.Inventory.PlayerEquipment.EquipGun(InventoryItem.Stick);      
             if (_playerBrain.Inventory.PlayerEquipment.currentGun)
-                _playerBrain.Inventory.PlayerEquipment.currentGun.AutoFire(_playerBrain.Targeting.currentTarget);
+                _playerBrain.Inventory.PlayerEquipment.currentGun.AutoFire(_playerBrain.Targeting.currentTarget).Forget();
         }
-        
-        
     }
 }

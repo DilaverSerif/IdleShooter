@@ -17,6 +17,13 @@
       },
       "hash": "b849990020c30ac6ead4e4fb4881428f86dcde0d"
     },
+    "com.gameframe.sceneswitcher": {
+      "version": "https://github.com/coryleach/UnitySceneSwitcher.git#1.0.3",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "7665663a7e36dba1ecba57d816efdfd871b373e3"
+    },
     "com.inspiaaa.unityhfsm": {
       "version": "https://github.com/Inspiaaa/UnityHFSM.git#upm",
       "depth": 0,

@@ -48,7 +48,7 @@ namespace _GAME_.Scripts
             var targetMoveState = new TargetMoveState(this);
             var targetIdleState = new TargetIdleState(this);
             
-            var cutIdleState = new LootIdleState(this);
+            //var cutIdleState = new LootIdleState(this);
             
             _stateMachine.AddState(EPlayerState.Idle, idleState);
             _stateMachine.AddState(EPlayerState.Move, walkState);

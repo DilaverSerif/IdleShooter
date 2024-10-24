@@ -1,4 +1,5 @@
 using _BASE_.Scripts;
+using Cysharp.Threading.Tasks;
 
 namespace _GAME_.Scripts
 {
@@ -12,14 +13,11 @@ namespace _GAME_.Scripts
         {
             base.OnEnter();
             _playerBrain.CharacterController.SetLookDirection(PhysicsBasedCharacterController.lookDirectionOptions.targetDirection);
-        }
-
-        public override void OnLogic()
-        {
-            base.OnLogic();
             
             if (_playerBrain.Inventory.PlayerEquipment.currentGun)
-                _playerBrain.Inventory.PlayerEquipment.currentGun.AutoFire(_playerBrain.Targeting.currentTarget);
+                _playerBrain.Inventory
+                    .PlayerEquipment.currentGun
+                    .AutoFire(_playerBrain.Targeting.currentTarget).Forget();
         }
     }
 }

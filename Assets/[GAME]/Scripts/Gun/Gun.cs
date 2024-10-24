@@ -98,15 +98,27 @@ namespace _GAME_.Scripts.Gun
 
         public override async UniTask AutoFire(Damageable target)
         {
+            Debug.Log("AutoFire Started");
             _autoFireToken?.Cancel();
             _autoFireToken = new CancellationTokenSource();
+            
+            await UniTask.WaitForSeconds(.25f, cancellationToken: _autoFireToken.Token);
             
             while (_autoFireToken.Token.IsCancellationRequested == false)
             {
                 if(canAttack.Count > 0)
-                    if(!canAttack.All(x => x()))
-                        return;
-                if(target && IsFar(target.transform)) return;
+                    if (!canAttack.All(x => x()))
+                    {
+                        Debug.Log("Can't Attack");
+                        await UniTask.NextFrame(cancellationToken: _autoFireToken.Token);
+                        continue;
+                    }
+                if (target && IsFar(target.transform))
+                {
+                    Debug.Log("Target is far away");
+                    await UniTask.NextFrame(cancellationToken: _autoFireToken.Token);
+                    continue;
+                }
 
                 await SpawnBullets(_autoFireToken.Token);
             }
@@ -153,5 +165,10 @@ namespace _GAME_.Scripts.Gun
             }
         }
 #endif
+        public void StopFire()
+        {
+            _autoFireToken?.Cancel();
+            gunState = GunState.Idle;
+        }
     }
 }

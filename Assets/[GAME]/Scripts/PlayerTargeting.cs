@@ -5,10 +5,21 @@ namespace _GAME_.Scripts
 {
     public class PlayerTargeting : Targeting<Damageable>
     {
+        public Transform aimTarget;
         public Side side => currentTarget.GetSide();
         void Update()
         {
             FindTarget();
+            if (currentTarget)
+            {
+                aimTarget.position = currentTarget.transform.position;
+            }
+            else
+            {
+                var pos = transform.position + transform.forward * 5;
+                pos.y = 1f;
+                aimTarget.position = pos;
+            }
         }
 
         protected override List<Damageable> OrderTargets(Collider[] results)
