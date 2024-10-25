@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using System.Threading;
 using Cysharp.Threading.Tasks;
@@ -10,14 +9,14 @@ namespace _GAME_.Scripts.Gun
 {
     public enum WeaponType
     {
-        Handgun = 0,
-        Rifle = 1,
-        Shotgun = 2,
-        Sniper = 3,
-        MachineGun = 4,
-        RocketLauncher = 5,
-        GrenadeLauncher = 6,
-        Melee = 7,
+        Handgun = 1,
+        Rifle = 2,
+        Shotgun = 3,
+        Sniper = 4,
+        MachineGun = 5,
+        RocketLauncher = 6,
+        GrenadeLauncher = 7,
+        Melee = 0,
     }
     
     public enum GunState
@@ -29,6 +28,11 @@ namespace _GAME_.Scripts.Gun
 
     public sealed class Gun : Damager
     {
+        [BoxGroup("Generally")]
+        public GunIKData leftHandIK;
+        [BoxGroup("Generally")]
+        public GunIKData rightHandIK;
+        
         public Magazine magazine;
         public GunBarrel gunBarrel;
         [BoxGroup("Generally")]
@@ -65,13 +69,13 @@ namespace _GAME_.Scripts.Gun
             {
                 var spawnedBullet = Instantiate(getBulletObject, firePoint.position, forwards[i] * transform.rotation);
                 spawnedBullet.Fire(weaponLevel.Damage);
-                if(gunBarrel.waitPerFireBullet > 0)
-                    await UniTask.WaitForSeconds(gunBarrel.waitPerFireBullet, cancellationToken: token);
-                if (!(gunBarrel.waitPerFireBullet > 0)) continue;
                 
                 if(muzzleFlash)
                     muzzleFlash.Play();
                 OnFireBullet?.Invoke(i);
+                
+                if(gunBarrel.waitPerFireBullet > 0)
+                    await UniTask.WaitForSeconds(gunBarrel.waitPerFireBullet, cancellationToken: token);
             }
             
             await UniTask.WaitForSeconds(weaponLevel.FireRate, cancellationToken: token);

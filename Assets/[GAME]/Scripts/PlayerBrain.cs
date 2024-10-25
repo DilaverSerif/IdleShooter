@@ -33,13 +33,14 @@ namespace _GAME_.Scripts
             }
         }
         private StateMachine<EPlayerState,PlayerBrain> _stateMachine;
-        internal Targeting<Damageable> Targeting;
+        internal PlayerTargeting Targeting;
         internal PhysicsBasedCharacterController CharacterController;
         internal PlayerInventory Inventory;
         private void Awake()
         {
+            Application.targetFrameRate = 61;
             CharacterController = GetComponent<PhysicsBasedCharacterController>();
-            Targeting = GetComponent<Targeting<Damageable>>();
+            Targeting = GetComponent<PlayerTargeting>();
             Inventory = GetComponent<PlayerInventory>();
             
             _stateMachine = new StateMachine<EPlayerState,PlayerBrain>();

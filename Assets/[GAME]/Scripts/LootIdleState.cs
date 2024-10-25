@@ -13,9 +13,9 @@ namespace _GAME_.Scripts
         {
             base.OnEnter();
             _playerBrain.CharacterController.SetLookDirection(PhysicsBasedCharacterController.lookDirectionOptions.targetDirection);
-            _playerBrain.Inventory.PlayerEquipment.EquipGun(InventoryItem.Stick);      
-            if (_playerBrain.Inventory.PlayerEquipment.currentGun)
-                _playerBrain.Inventory.PlayerEquipment.currentGun.AutoFire(_playerBrain.Targeting.currentTarget).Forget();
+            _playerBrain.Inventory.playerEquipment.EquipGun(InventoryItem.Stick);      
+            if (_playerBrain.Inventory.playerEquipment.currentGun)
+                _playerBrain.Inventory.playerEquipment.currentGun.AutoFire(_playerBrain.Targeting.currentTarget).Forget();
         }
     }
 }

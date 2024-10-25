@@ -12,6 +12,7 @@ namespace _GAME_.Scripts
         private static readonly int Target = Animator.StringToHash("Target");
         private static readonly int Shoot = Animator.StringToHash("Shoot");
         private static readonly int ShootIndex = Animator.StringToHash("ShootIndex");
+        private static readonly int WeaponType = Animator.StringToHash("WeaponType");
 
         private PlayerBrain _playerBrain;
         private Targeting<Damageable> _targeting;
@@ -19,6 +20,14 @@ namespace _GAME_.Scripts
         private Rigidbody _playerRigidbody;
         private PhysicsBasedCharacterController _playerController;
         private PlayerStacker _playerStacker;
+
+        
+        public Transform leftHintTransform;
+        public Transform leftTargetTransform;
+        
+        public Transform rightHintTransform;
+        public Transform rightTargetTransform;
+        
         private void Awake()
         {
             _targeting = GetComponent<Targeting<Damageable>>();
@@ -40,13 +49,29 @@ namespace _GAME_.Scripts
             PlayerEquipment.OnGunEquipped -= OnGunEquipped;
         }
 
-        private void OnGunEquipped(Gun.Gun obj)
+        private void OnGunEquipped(Gun.Gun gun)
         {
-            obj.OnFireBullet += i =>
-            {
-                _playerAnimator.SetTrigger(Shoot);
-                _playerAnimator.SetInteger(ShootIndex, i);
-            };
+            _playerAnimator.SetInteger(WeaponType, (int)gun.weaponType);
+            
+            Debug.Log("OnGunEquipped");
+            gun.OnFireBullet += OnFireBullet;
+
+            leftHintTransform.SetLocalPositionAndRotation(gun.leftHandIK.HintPosition,
+                Quaternion.Euler(gun.leftHandIK.HintRotation));
+            leftTargetTransform.SetLocalPositionAndRotation(gun.leftHandIK.TargetPosition,
+                Quaternion.Euler(gun.leftHandIK.TargetRotation));
+            
+            rightHintTransform.SetLocalPositionAndRotation(gun.rightHandIK.HintPosition,
+                Quaternion.Euler(gun.rightHandIK.HintRotation));
+            rightTargetTransform.SetLocalPositionAndRotation(gun.rightHandIK.TargetPosition,
+                Quaternion.Euler(gun.rightHandIK.TargetRotation));
+        }
+
+        private void OnFireBullet(int obj)
+        {
+            _playerAnimator.ResetTrigger(Shoot);
+            _playerAnimator.SetTrigger(Shoot);
+            _playerAnimator.SetInteger(ShootIndex, obj);
         }
 
         private void OnPutStack()

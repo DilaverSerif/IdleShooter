@@ -1,5 +1,6 @@
 using System;
 using _GAME_.Scripts.Gun;
+using UnityEngine;
 using UnityEngine.Serialization;
 using Object = UnityEngine.Object;
 
@@ -11,32 +12,36 @@ namespace _GAME_.Scripts
         public Gun.Gun currentGun;
         public static Action<Gun.Gun> OnGunEquipped;
         public InventoryItem lastGun;
-        
-        public void EquipGun(Gun.Gun gun)
+        public Transform gunHolder;
+        public void StopFire()
         {
             if (currentGun != null)
-            {
-                currentGun.OnFireBullet = null;
-                lastGun = currentGun.inventoryItem;
-            }
-            currentGun = gun;
-            
-            OnGunEquipped?.Invoke(gun);
+                currentGun.StopFire();
         }
         
         public void EquipGun(InventoryItem gun)
         {
             if (currentGun != null)
-                lastGun = currentGun.inventoryItem;
+                UnEquipGun();
 
-            currentGun = Object.Instantiate(InventoryData.Instance.GetGun(gun));
-            
+            var gunData = InventoryData.Instance.GetGun(gun);
+            currentGun = Object.Instantiate(gunData.damager as Gun.Gun);
+            var currentGunTransform = currentGun.transform;
+            currentGunTransform.SetParent(null);
+            currentGunTransform.SetParent(gunHolder);
+
+            currentGunTransform.localScale = gunData.weaponScale;
+            currentGunTransform.localPosition = gunData.weaponPosition;
+            currentGunTransform.localRotation = Quaternion.Euler(gunData.weaponRotation);
+         
             OnGunEquipped?.Invoke(currentGun);
         }
         
-        public void UnequipGun()
+        public void UnEquipGun()
         {
+            currentGun.StopFire();
             lastGun = currentGun.inventoryItem;
+            Object.Destroy(currentGun.gameObject);
             currentGun = null;
         }
     }

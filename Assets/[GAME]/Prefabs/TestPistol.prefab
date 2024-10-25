@@ -134,7 +134,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   owner: {fileID: 0}
   inventoryItem: 101
-  weaponType: 0
+  weaponType: 1
   weaponLevel:
     damageCurve:
       serializedVersion: 2
@@ -166,34 +166,42 @@ MonoBehaviour:
       - serializedVersion: 3
         time: 0
         value: 0
-        inSlope: 1
-        outSlope: 1
+        inSlope: 0.35
+        outSlope: 0.35
         tangentMode: 34
         weightedMode: 0
         inWeight: 0
-        outWeight: 0
+        outWeight: 0.33333334
       - serializedVersion: 3
         time: 1
-        value: 1
-        inSlope: 1
-        outSlope: 1
+        value: 0.35
+        inSlope: 0.35
+        outSlope: 0.35
         tangentMode: 34
         weightedMode: 0
-        inWeight: 0
+        inWeight: 0.33333334
         outWeight: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
     weaponLevel: 1
-    waitPerFireBullet: 1
-  muzzleFlash: {fileID: 0}
-  firePoint: {fileID: 5648682811799928059}
+  leftHandIK:
+    TargetPosition: {x: 0, y: 0, z: 0}
+    TargetRotation: {x: 0, y: 0, z: 0}
+    HintPosition: {x: 0, y: 0, z: 0}
+    HintRotation: {x: 0, y: 0, z: 0}
+  rightHandIK:
+    TargetPosition: {x: 0, y: 0, z: 0}
+    TargetRotation: {x: 0, y: 0, z: 0}
+    HintPosition: {x: 0, y: 0, z: 0}
+    HintRotation: {x: 0, y: 0, z: 0}
   magazine:
     infinite: 1
     capacity: 0
     reloadTime: 0
   gunBarrel:
     perShootingBulletCount: 1
+    waitPerFireBullet: 0
     bullet: {fileID: 8523136729586284032, guid: 8cb51da54123c44d584b652d08d4a98c,
       type: 3}
     fireType: 1
@@ -258,6 +266,9 @@ MonoBehaviour:
     increasePerShootSpread: 0.1
     range: 10
     angle: 1
+  muzzleFlash: {fileID: 0}
+  firePoint: {fileID: 5648682811799928059}
+  gunState: 0
 --- !u!1 &8679351350353397037
 GameObject:
   m_ObjectHideFlags: 0

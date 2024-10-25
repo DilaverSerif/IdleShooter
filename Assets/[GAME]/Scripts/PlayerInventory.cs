@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using _GAME_.Scripts.Gun;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace _GAME_.Scripts
 {
@@ -14,24 +15,8 @@ namespace _GAME_.Scripts
     
     public class PlayerInventory : MonoBehaviour
     {
-        public PlayerEquipment PlayerEquipment;
+        public PlayerEquipment playerEquipment;
         public List<InventoryItemData> inventoryItems;
-
-
-        private void OnEnable()
-        {
-            PlayerEquipment.OnGunEquipped += OnGunEquipped;
-        }
-        
-        private void OnDisable()
-        {
-            PlayerEquipment.OnGunEquipped -= OnGunEquipped;
-        }
-
-        private void OnGunEquipped(Gun.Gun newGun)
-        {
-            newGun.transform.SetParent(transform);
-        }
         
         public void AddItem(InventoryItem item, int count)
         {
@@ -49,6 +34,11 @@ namespace _GAME_.Scripts
         {
             var itemData = inventoryItems.Find(x => x.item == item);
             return itemData.count > 0;
+        }
+
+        public void AddEquipment(InventoryItem weaponType)
+        {
+            AddItem(weaponType, 1);
         }
     }
 }

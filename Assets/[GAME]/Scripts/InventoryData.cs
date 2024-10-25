@@ -8,11 +8,11 @@ namespace _GAME_.Scripts
     [CreateAssetMenu(menuName = "Create InventoryData", fileName = "InventoryData", order = 0)]
     public class InventoryData : SingletonScriptableObject<InventoryData> 
     {
-        public List<Gun.Gun> guns;
+        public List<WeaponData> WeaponDatas;
         
-        public Gun.Gun GetGun(InventoryItem item)
+        public WeaponData GetGun(InventoryItem item)
         {
-            return guns.Find(gun => gun.inventoryItem == item);
+            return WeaponDatas.Find(x => x.damager.inventoryItem == item);
         }
     }
 }

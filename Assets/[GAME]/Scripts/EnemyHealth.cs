@@ -4,7 +4,6 @@ namespace _GAME_.Scripts
 {
     public class EnemyHealth : Damageable
     {
-
         public override Side GetSide()
         {
             return Side.Enemy;

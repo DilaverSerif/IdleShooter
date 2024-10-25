@@ -11,7 +11,7 @@ namespace _GAME_.Scripts
         public override void OnEnter()
         {
             base.OnEnter();
-            _playerBrain.Inventory.PlayerEquipment.currentGun.StopFire();
+            _playerBrain.Inventory.playerEquipment.currentGun?.StopFire();
             _playerBrain.CharacterController.SetLookDirection(PhysicsBasedCharacterController.lookDirectionOptions.targetDirection);
         }
     }

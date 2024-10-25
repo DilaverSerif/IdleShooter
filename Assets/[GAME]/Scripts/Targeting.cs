@@ -16,7 +16,8 @@ namespace _GAME_.Scripts
         public LayerMask targetLayer;
         public LayerMask blockLayer;
         public T currentTarget;
-        public bool HasTarget => currentTarget != null;
+
+        public virtual bool HasTarget => currentTarget != null;
 
         //<summary>
         // Returns the closest target in the attack range.
