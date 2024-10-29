@@ -44,5 +44,6 @@ namespace _GAME_.Scripts
             Object.Destroy(currentGun.gameObject);
             currentGun = null;
         }
+
     }
 }

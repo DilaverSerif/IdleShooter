@@ -9,8 +9,9 @@ using UnityEngine.Serialization;
 namespace _BASE_.Scripts
 {
     [Serializable]
-    public class LevelManager: IManager
+    public class LevelManager:Manager
     {
+        public SceneReference mainScene;
         public SceneReference loadingScene;
         public SceneReference[] levelOrders;
         private CancellationTokenSource _cancellationTokenSource;
@@ -28,6 +29,8 @@ namespace _BASE_.Scripts
 
         public async UniTask LoadScenes()
         {
+            if(mainScene == null) return;
+            if(mainScene.Name != SceneManager.GetActiveScene().name) return;
             var token = _cancellationTokenSource.Token;
             foreach (var sceneReference in levelOrders)
             {
@@ -43,16 +46,14 @@ namespace _BASE_.Scripts
             Debug.Log("All scenes loaded");
         }
 
-        public void Enable()
+        public void OnEnable()
         {
             _cancellationTokenSource = new CancellationTokenSource();
         }
 
-        public void Disable()
+        public void OnDisable()
         {
             _cancellationTokenSource.Cancel();
         }
-
-        public int Priority => 0; // LevelManager should be the first manager to be enabled
     }
 }

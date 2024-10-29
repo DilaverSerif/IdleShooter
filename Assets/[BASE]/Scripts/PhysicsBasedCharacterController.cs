@@ -1,11 +1,12 @@
 using System;
 using _BASE_.Joystick_Pack.Scripts.Base;
+using _BASE_.Scripts.Stat_System;
 using _GAME_.Scripts;
 using UnityEngine;
 
 namespace _BASE_.Scripts
 {
-    public class PhysicsBasedCharacterController : MonoBehaviour
+    public class PhysicsBasedCharacterController : MonoBehaviour, IStatOwner
     {
         [SerializeField] private PlayerBrain _playerBrain;
         private Rigidbody _rb;
@@ -347,6 +348,13 @@ namespace _BASE_.Scripts
         {
             var velocity = _rb.velocity;
             return velocity.magnitude / _maxSpeed;
+        }
+
+        public StatOwner StatOwner { get; set; }
+        public void UpdateStat(Stat stat)
+        {
+            if (stat.statTag == StatTags.BaseSpeed)
+                _maxSpeed += stat.value;
         }
     }
 }

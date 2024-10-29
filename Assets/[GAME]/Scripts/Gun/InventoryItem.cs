@@ -9,5 +9,8 @@ namespace _GAME_.Scripts.Gun
         
         //Bullets
         PistolBullet = 200,
+        
+        //Attachments
+        BulletMultiplier = 300,
     }
 }

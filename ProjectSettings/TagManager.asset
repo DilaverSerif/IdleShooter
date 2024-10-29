@@ -15,9 +15,9 @@ TagManager:
   - Enemy
   - Block
   - Bullet
-  - 
-  - 
-  - 
+  - DontShow
+  - Overlay
+  - Player
   - 
   - 
   - 

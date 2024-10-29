@@ -17,6 +17,11 @@ namespace _GAME_.Scripts
         public LayerMask blockLayer;
         public T currentTarget;
 
+        public bool HaveDangerousArea;
+        public bool HaveBlockArea;
+        public bool HaveViewAngle;
+        public bool selectClosestTarget;
+        
         public virtual bool HasTarget => currentTarget != null;
 
         //<summary>
@@ -37,15 +42,12 @@ namespace _GAME_.Scripts
         }
         bool HaveTarget()
         {
-
-            if (currentTarget != null) //Eğer target varsa 
+            if (currentTarget == null) return false; //Eğer target varsa 
+            var currentTargetTransform = currentTarget.transform;
+            if (!CheckBlock(currentTargetTransform))
             {
-                var currentTargetTransform = currentTarget.transform;
-                if (!CheckBlock(currentTargetTransform))
-                {
-                    if (Vector3.Distance(currentTargetTransform.position, currentTarget.transform.position) < exitViewRange)
-                        return true;
-                }
+                if (Vector3.Distance(currentTargetTransform.position, currentTarget.transform.position) < exitViewRange)
+                    return true;
             }
             return false;
         }
@@ -59,19 +61,25 @@ namespace _GAME_.Scripts
                 var currentPosition = transform.position;
                 var distance = Vector3.Distance(currentPosition, iDamageable.transform.position);
 
-                if (IsTargetInDangerousRange(distance))
+                if (HaveDangerousArea && IsTargetInDangerousRange(distance))
                 {
                     currentTarget = iDamageable;
                     return true;
                 }
 
-                if (IsTargetInViewAngle(iDamageable))
+                if (HaveViewAngle && IsTargetInViewAngle(iDamageable))
                 {
                     currentTarget = iDamageable;
                     return true;
                 }
 
                 if (currentTarget == null)
+                {
+                    currentTarget = iDamageable;
+                    return true;
+                }
+
+                if (selectClosestTarget)
                 {
                     currentTarget = iDamageable;
                     return true;

@@ -1,9 +1,11 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using Extensions;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace _GAME_.Scripts.Gun
 {
@@ -41,6 +43,9 @@ namespace _GAME_.Scripts.Gun
         public Transform firePoint;
         [BoxGroup("Generally")]
         public GunState gunState;
+        
+        
+        public List<GunPlugin> weaponPlugins = new();
         
         private CancellationTokenSource _autoFireToken;
         private void OnDrawGizmos()
@@ -87,7 +92,7 @@ namespace _GAME_.Scripts.Gun
         {
             return Vector3.Distance(firePoint.position, target.position) > gunBarrel.range;
         }
-
+        
         private void OnEnable()
         {
             canAttack.Add(() => gunState == GunState.Idle);
@@ -126,6 +131,25 @@ namespace _GAME_.Scripts.Gun
 
                 await SpawnBullets(_autoFireToken.Token);
             }
+        }
+        
+        public void AddPlugin(InventoryItem plugin)
+        {
+            var pluginData = InventoryData.Instance.GetWeaponPlugin(plugin);
+            weaponPlugins.Add(pluginData);
+            pluginData.Effect(this);
+            
+            pluginData.transform.SetParent(transform);
+            pluginData.transform.localPosition = Vector3.zero;
+            pluginData.transform.localRotation = Quaternion.identity;
+        }
+        
+        public void RemovePlugin(InventoryItem plugin)
+        {
+            var pluginData = weaponPlugins.Find(x => x.pluginType == plugin);
+            weaponPlugins.Remove(pluginData);
+            pluginData.UnEffect(this);
+            Destroy(pluginData.gameObject);
         }
 
 #if UNITY_EDITOR
