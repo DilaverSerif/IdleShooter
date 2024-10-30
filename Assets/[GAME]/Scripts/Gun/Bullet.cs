@@ -1,3 +1,4 @@
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
@@ -12,54 +13,46 @@ namespace _GAME_.Scripts.Gun
 
     public abstract class BulletBase : MonoBehaviour
     {
+        [BoxGroup("Generally")]
         public int damage;
+        [BoxGroup("Generally")]
         public InventoryItem inventoryItem;
-        public Vector2 bulletRangeMinMax;
-        public Vector2 bulletLifeTimeMinMax;
-
-        [SerializeField]
+        
+        [BoxGroup("Particle")]
+        public float offsetSpawn;
+        [SerializeField,BoxGroup("Particle")]
         private ParticleSystem bulletDecalParticle;
+        
         protected Rigidbody Rigidbody;
         protected Collider BaseCollider;
-        protected float BulletRange()
-        {
-            return Random.Range(bulletRangeMinMax.x, bulletRangeMinMax.y);
-        }
-
-        protected float BulletLifeTime()
-        {
-            return Random.Range(bulletLifeTimeMinMax.x, bulletLifeTimeMinMax.y);
-        }
-    
         protected virtual void Awake()
         {
             Rigidbody = GetComponent<Rigidbody>();
             BaseCollider = GetComponent<Collider>();
         }
     
-        public abstract void Fire(float extraDamage = 0);
+        public abstract void Fire(BulletFireData bulletFireData = default);
         protected virtual void SpawnDecalEffect(ContactPoint contact)
         {
-            Vector3 hitPosition = contact.point;
-            Vector3 hitNormal = contact.normal;
+            var hitPosition = contact.point;
+            var hitNormal = contact.normal;
                 
-            Vector3 spawnPosition = hitPosition + hitNormal * offsetSpawn;
+            var spawnPosition = hitPosition + hitNormal * offsetSpawn;
 
-            bulletDecalParticle.transform.position = spawnPosition;
-            bulletDecalParticle.transform.forward = hitNormal;
+            var particleTransform = bulletDecalParticle.transform;
+            particleTransform.position = spawnPosition;
+            particleTransform.forward = hitNormal;
+            
             bulletDecalParticle.transform.SetParent(null);
             bulletDecalParticle.Play();
         }
 
-        public float offsetSpawn;
         private void OnCollisionEnter(Collision other)
         {
-            if (other.transform.TryGetComponent(out Damageable damageable))
-            {
-                if(bulletDecalParticle) SpawnDecalEffect(other.contacts[0]);
-                damageable.TakeDamage(damage);
-                Destroy(gameObject);
-            }
+            if (!other.transform.TryGetComponent(out Damageable damageable)) return;
+            if(bulletDecalParticle) SpawnDecalEffect(other.contacts[0]);
+            damageable.TakeDamage(damage);
+            Destroy(gameObject);
         }
     
     }

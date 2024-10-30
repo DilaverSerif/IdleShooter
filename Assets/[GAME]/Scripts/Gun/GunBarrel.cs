@@ -26,6 +26,8 @@ namespace _GAME_.Scripts.Gun
         [BoxGroup("Spread")]
         public float maxSpreadTime;
         public float increasePerShootSpread;
+        
+        public float bulletSpeed;
         public float range;
         public float angle;
         [BoxGroup("Debug"),ShowInInspector]

@@ -1,6 +1,5 @@
-using System;
 using _GAME_.Scripts;
-using JetBrains.Annotations;
+using Cysharp.Threading.Tasks;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityHFSM;
@@ -16,8 +15,8 @@ public enum EnemyState
 
 public abstract class EnemyStateBase : StateBase<EnemyState>
 {
-    public EnemyBrain EnemyBrain;
-    public EnemyStateBase(EnemyBrain enemyBrain,bool needsExitTime = false, bool isGhostState = false) : base(needsExitTime, isGhostState)
+    protected readonly EnemyBrain EnemyBrain;
+    protected EnemyStateBase(EnemyBrain enemyBrain,bool needsExitTime = false, bool isGhostState = false) : base(needsExitTime, isGhostState)
     {
         EnemyBrain = enemyBrain;
     }
@@ -59,14 +58,24 @@ public class AttackState : EnemyStateBase
     public override void OnEnter()
     {
         base.OnEnter();
+        //EnemyBrain._agentMoveSystem.AgentTurn(false);
         EnemyBrain._agentMoveSystem.MoveTo(EnemyBrain.transform.position);
-        EnemyBrain._weaponAttackSystem.Attack();
+        var target = EnemyBrain._targetingSystem.currentTarget.transform;
+        EnemyBrain._weaponAttackSystem.AddRequirement(()=>EnemyBrain._agentMoveSystem.AgentTurnTo(target.position));
+        EnemyBrain._weaponAttackSystem.TryAttack(target).Forget();
     }
-    
+
+    // public override void OnLogic()
+    // {
+    //     var target = EnemyBrain._targetingSystem.currentTarget.transform;
+    //     EnemyBrain._agentMoveSystem.AgentTurn(target);
+    // }
+
     public override void OnExit()
     {
         base.OnExit();
         EnemyBrain._weaponAttackSystem.StopAttack();
+        EnemyBrain._weaponAttackSystem.ClearRequirements();
     }
 }
 
@@ -95,7 +104,7 @@ public class EnemyBrain : MonoBehaviour
     private EnemyAnimationSystem _animationSystem;
     public AgentMoveSystem _agentMoveSystem;
     public EnemyTargeting _targetingSystem;
-    public EnemyWeaponAttackSystem _weaponAttackSystem;
+    public AttackSystem _weaponAttackSystem;
     
     private StateMachine<EnemyState,EnemyBrain> _stateMachine;
 
@@ -108,7 +117,7 @@ public class EnemyBrain : MonoBehaviour
         _agentMoveSystem = GetComponent<AgentMoveSystem>();
         _animationSystem = GetComponent<EnemyAnimationSystem>();
         _healthSystem = GetComponent<EnemyHealth>();
-        _weaponAttackSystem = GetComponent<EnemyWeaponAttackSystem>();
+        _weaponAttackSystem = GetComponent<AttackSystem>();
         
         _stateMachine = new StateMachine<EnemyState,EnemyBrain>();
     }

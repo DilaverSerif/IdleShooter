@@ -4,9 +4,9 @@ namespace _GAME_.Scripts
 {
     public class TestBullet : Bullet<EnemyHealth>
     {
-        public override void Fire(float extraDamage = 0)
+        public override void Fire(BulletFireData bulletFireData = default)
         {
-            Rigidbody.velocity = transform.forward * BulletRange();
+            Rigidbody.velocity = transform.forward * bulletFireData.ThrowSpeed;
         }
     }
 }

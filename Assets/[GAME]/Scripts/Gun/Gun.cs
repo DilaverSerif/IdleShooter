@@ -5,7 +5,6 @@ using Cysharp.Threading.Tasks;
 using Extensions;
 using Sirenix.OdinInspector;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace _GAME_.Scripts.Gun
 {
@@ -27,8 +26,8 @@ namespace _GAME_.Scripts.Gun
         Fire = 1,
         Reload = 2,
     }
-
-    public sealed class Gun : Damager
+    
+    public class Gun : Damager
     {
         [BoxGroup("Generally")]
         public GunIKData leftHandIK;
@@ -46,8 +45,8 @@ namespace _GAME_.Scripts.Gun
         
         
         public List<GunPlugin> weaponPlugins = new();
-        
-        private CancellationTokenSource _autoFireToken;
+
+        protected CancellationTokenSource _autoFireToken;
         private void OnDrawGizmos()
         {
             if(firePoint == null) return;
@@ -61,8 +60,8 @@ namespace _GAME_.Scripts.Gun
             gunBarrel.OnGizmosSelected(firePoint);
             magazine.GizmosSelected(firePoint);
         }
-        
-        private async UniTask SpawnBullets(CancellationToken token = default)
+
+        protected virtual async UniTask SpawnBullets(CancellationToken token = default, Transform target = null)
         {
             gunState = GunState.Fire;
             var bulletCount = gunBarrel.perShootingBulletCount;
@@ -73,7 +72,8 @@ namespace _GAME_.Scripts.Gun
             for (var i = 0; i < bulletCount; i++)
             {
                 var spawnedBullet = Instantiate(getBulletObject, firePoint.position, forwards[i] * transform.rotation);
-                spawnedBullet.Fire(weaponLevel.Damage);
+                spawnedBullet.Fire(new BulletFireData(targetPosition: target ? target.position : default
+                , throwSpeed:gunBarrel.bulletSpeed, bulletDamage:weaponLevel.Damage));
                 
                 if(muzzleFlash)
                     muzzleFlash.Play();
@@ -87,8 +87,8 @@ namespace _GAME_.Scripts.Gun
             
             gunState = GunState.Idle;
         }
-        
-        private bool IsFar(Transform target)
+
+        protected bool IsFar(Transform target)
         {
             return Vector3.Distance(firePoint.position, target.position) > gunBarrel.range;
         }
@@ -129,7 +129,7 @@ namespace _GAME_.Scripts.Gun
                     continue;
                 }
 
-                await SpawnBullets(_autoFireToken.Token);
+                await SpawnBullets(_autoFireToken.Token, target ? target.transform : null);
             }
         }
         
