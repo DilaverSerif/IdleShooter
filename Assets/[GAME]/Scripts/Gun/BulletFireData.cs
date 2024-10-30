@@ -5,13 +5,13 @@ namespace _GAME_.Scripts.Gun
     {
         public readonly float ThrowSpeed;
         public Vector3 TargetPosition;
-        public float bulletDamage;
+        public readonly float BulletDamage;
 
         public BulletFireData(float throwSpeed, Vector3 targetPosition = default, float bulletDamage = 0)
         {
             ThrowSpeed = throwSpeed;
             TargetPosition = targetPosition;
-            this.bulletDamage = bulletDamage;
+            this.BulletDamage = bulletDamage;
         }
 
     }

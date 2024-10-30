@@ -14,7 +14,7 @@ namespace _GAME_.Scripts.Gun
     public abstract class BulletBase : MonoBehaviour
     {
         [BoxGroup("Generally")]
-        public int damage;
+        public float damage;
         [BoxGroup("Generally")]
         public InventoryItem inventoryItem;
         
@@ -50,6 +50,7 @@ namespace _GAME_.Scripts.Gun
         private void OnCollisionEnter(Collision other)
         {
             if (!other.transform.TryGetComponent(out Damageable damageable)) return;
+            Debug.Log("Bullet hit " + damageable.name);
             if(bulletDecalParticle) SpawnDecalEffect(other.contacts[0]);
             damageable.TakeDamage(damage);
             Destroy(gameObject);

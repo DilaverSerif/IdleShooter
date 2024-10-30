@@ -296,11 +296,13 @@ MonoBehaviour:
       m_RotationOrder: 4
     maxSpreadTime: 1
     increasePerShootSpread: 0.1
+    bulletSpeed: 20
     range: 10
     angle: 1
   muzzleFlash: {fileID: 1991315537902536264}
   firePoint: {fileID: 3771220152638382772}
   gunState: 0
+  weaponPlugins: []
 --- !u!1001 &1991315537917635232
 PrefabInstance:
   m_ObjectHideFlags: 0

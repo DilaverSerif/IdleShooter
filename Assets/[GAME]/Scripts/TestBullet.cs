@@ -6,6 +6,7 @@ namespace _GAME_.Scripts
     {
         public override void Fire(BulletFireData bulletFireData = default)
         {
+            damage = bulletFireData.BulletDamage;
             Rigidbody.velocity = transform.forward * bulletFireData.ThrowSpeed;
         }
     }

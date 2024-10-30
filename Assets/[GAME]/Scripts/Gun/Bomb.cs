@@ -14,9 +14,19 @@ namespace _GAME_.Scripts.Gun
 
         public override void Fire(BulletFireData bulletFireData = default)
         {
-            Rigidbody.DOJump(bulletFireData.TargetPosition,
-                _startPosition.y + Random.Range(1, 3f), 1,
-                bulletFireData.ThrowSpeed).SetEase(Ease.Linear);
+            var alertAreaData = new SpawnAlertAreaData
+            {
+                position = bulletFireData.TargetPosition,
+                alertAreaType = AlertAreaType.Circle,
+                duration = 1f,
+                delay = 0.15f,
+                onSpawn = () => Rigidbody.DOJump(bulletFireData.TargetPosition,
+                    _startPosition.y + Random.Range(1, 3f), 1,
+                    bulletFireData.ThrowSpeed).SetEase(Ease.Linear)
+            };
+            
+            
+            AlertAreaManager.Instance.SpawnAlertArea(alertAreaData);
 
             // // Hedefe doğru yönü hesapla
             // Vector3 direction = bulletFireData.TargetPosition - _startPosition;
