@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using _BASE_.Scripts.Extensions;
 using Sirenix.OdinInspector;
+using UnityEngine.SceneManagement;
 
 namespace _BASE_.Scripts
 {
@@ -14,11 +15,9 @@ namespace _BASE_.Scripts
             FindManagers();
             
             foreach (var manager in managers)
-            {
                 manager.Initialized();
-            }
         }
-
+        
         public T GetManager<T>()
         {
             return managers.OfType<T>().FirstOrDefault();

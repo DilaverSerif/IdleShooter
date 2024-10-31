@@ -5,6 +5,5 @@ namespace _GAME_.Scripts
     [Serializable]
     public partial class GameOptions
     {
-        public string GameName;
     }
 }
