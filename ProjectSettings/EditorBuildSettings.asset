@@ -11,4 +11,19 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/[GAME]/Scenes/MainScene.unity
     guid: 99c9720ab356a0642a771bea13969a05
+  - enabled: 1
+    path: Assets/[GAME]/Scenes/Menu/LevelBar.unity
+    guid: 629c6727412a946eea6193329e55b3c6
+  - enabled: 1
+    path: Assets/[GAME]/Scenes/Menu/LevelUI.unity
+    guid: 1945ea87aa6b646dd86ffc236b1d05e2
+  - enabled: 1
+    path: Assets/[GAME]/Scenes/Menu/StatShop.unity
+    guid: 9e137dd7ad5179d45b26c5e0a929bbab
+  - enabled: 1
+    path: Assets/[GAME]/Scenes/Menu/StatusBar.unity
+    guid: 7d4854b209bde4b76a29f6c6b1b51cde
+  - enabled: 1
+    path: Assets/[GAME]/Scenes/LoadingScene.unity
+    guid: 0130df128116f44a1a7334d67997620d
   m_configObjects: {}

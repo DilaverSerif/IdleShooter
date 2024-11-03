@@ -6,6 +6,6 @@ namespace _BASE_.Scripts
 {
     public abstract class SceneStarter: MonoBehaviour
     { 
-        public abstract UniTask LoadingScene(CancellationToken token);
+        public abstract UniTask OnLoadedScene(CancellationToken token);
     }
 }

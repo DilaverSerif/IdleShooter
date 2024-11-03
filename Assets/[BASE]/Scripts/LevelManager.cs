@@ -20,11 +20,22 @@ namespace _BASE_.Scripts
             get => ES3.Load("NextLevelName",defaultValue:"");
             set => ES3.Save("NextLevelName", value);
         }
-    
-        public void LoadNextLevel(string nextLevelName)
+        
+        public string GetNextLevelName()
+        {
+            return NextLevelName;
+        }
+        
+        public async void LoadNextLevel(string nextLevelName)
         {
             NextLevelName = nextLevelName;
-            SceneManager.LoadScene(loadingScene.Name);
+            var parameters = new LoadSceneParameters(LoadSceneMode.Single);
+            await SceneManager.LoadSceneAsync(loadingScene.Name, parameters);
+            
+            var findLoadingScene = SceneManager.GetSceneByName(loadingScene.Name).GetRootGameObjects()[0]
+                .GetComponent<SceneStarter>();
+            
+            await findLoadingScene.OnLoadedScene(_cancellationTokenSource.Token);
         }
 
         public async UniTask LoadScenes()
@@ -38,7 +49,7 @@ namespace _BASE_.Scripts
                 await UniTask.WaitUntil(() => loadingAsync is { isDone: true }, cancellationToken: token);
 
                 await SceneManager.GetSceneByName(sceneReference.Name).GetRootGameObjects()[0]
-                    .GetComponent<SceneStarter>().LoadingScene(token);
+                    .GetComponent<SceneStarter>().OnLoadedScene(token);
             
                 Debug.Log($"Loaded {sceneReference.Name}");
             }

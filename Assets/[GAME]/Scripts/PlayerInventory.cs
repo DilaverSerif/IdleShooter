@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using _BASE_.Scripts;
 using _GAME_.Scripts.Gun;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -7,7 +8,7 @@ using UnityEngine.Serialization;
 namespace _GAME_.Scripts
 {
     [Serializable]
-    public struct InventoryItemData
+    public class InventoryItemData
     {
         public InventoryItem item;
         public int count;
@@ -15,6 +16,7 @@ namespace _GAME_.Scripts
     
     public class PlayerInventory : MonoBehaviour
     {
+        public static Action<InventoryItem> OnItemAdded;
         public PlayerEquipment playerEquipment;
         public List<InventoryItemData> inventoryItems;
         
@@ -22,12 +24,8 @@ namespace _GAME_.Scripts
         {
             var itemData = inventoryItems.Find(x => x.item == item);
             itemData.count += count;
-        }
-        
-        public void RemoveItem(InventoryItem item, int count)
-        {
-            var itemData = inventoryItems.Find(x => x.item == item);
-            itemData.count -= count;
+            
+            OnItemAdded?.Invoke(item);
         }
         
         public bool HasItem(InventoryItem item)
@@ -40,5 +38,6 @@ namespace _GAME_.Scripts
         {
             AddItem(weaponType, 1);
         }
+      
     }
 }

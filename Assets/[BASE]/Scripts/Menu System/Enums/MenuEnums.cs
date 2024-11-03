@@ -1,4 +1,7 @@
 public enum MenuTags
 { None = -1,
-    Main = 0,
+    LevelBar = 0,
+    LevelUI = 1,
+    StatShop = 2,
+    StatusBar = 3,
 }

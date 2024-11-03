@@ -1,14 +1,19 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using _BASE_.Scripts.Extensions;
 using Sirenix.OdinInspector;
-using UnityEngine.SceneManagement;
 
 namespace _BASE_.Scripts
 {
     public class RedManager: Singleton<RedManager>
     {
         public List<Manager> managers;
+        
+        private void Awake()
+        {
+            DontDestroyOnLoad(gameObject);
+        }
         
         private void Start()
         {

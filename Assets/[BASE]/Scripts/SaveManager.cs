@@ -1,27 +1,31 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using _GAME_.Scripts;
 using UnityEngine;
-using Object = UnityEngine.Object;
+using UnityEngine.Serialization;
 
 namespace _BASE_.Scripts
 {
     [Serializable]
     public class SaveManager:Manager
     {
-        public List<ISave> SaveData = new();
-        
-        public void Save()
+        public PlayerSave playerSave;
+        private List<ISave> _saveData = new List<ISave>();
+
+        private void Save()
         {
-            foreach (var save in SaveData)
+            ES3.Save("PlayerSave", playerSave);
+            foreach (var save in _saveData)
             {
                 save.Save();
             }
         }
-        
-        public void Load()
+
+        private void Load()
         {
-            foreach (var save in SaveData)
+            playerSave = ES3.Load("PlayerSave", new PlayerSave());
+            foreach (var save in _saveData)
             {
                 save.Load();
             }
@@ -35,7 +39,7 @@ namespace _BASE_.Scripts
         public override void Initialized()
         {
             base.Initialized();
-            SaveData = FindObjectsOfType<MonoBehaviour>(true).OfType<ISave>().ToList();
+            _saveData = FindObjectsOfType<MonoBehaviour>(true).OfType<ISave>().ToList();
             Load();
         }
     }
