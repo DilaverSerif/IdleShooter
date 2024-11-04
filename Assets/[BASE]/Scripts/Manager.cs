@@ -8,7 +8,6 @@ namespace _BASE_.Scripts
     public abstract class Manager: MonoBehaviour
     {
         public SceneReference[] loadScenes;
-        public int priority;
         
         public virtual void Initialized()
         {

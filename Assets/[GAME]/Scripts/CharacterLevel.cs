@@ -6,10 +6,10 @@ using UnityEngine.Serialization;
 
 namespace _GAME_.Scripts
 {
-    public abstract class CharacterLevel: MonoBehaviour
+    public abstract class CharacterLevel
     {
-        public UnityEvent onLevelUp;
-        public UnityEvent onExperienceChanged;
+        public Action OnLevelUp;
+        public Action OnExperienceChanged;
         
         private int _level;
         [ShowInInspector, BoxGroup("Debug"),ReadOnly]
@@ -36,15 +36,38 @@ namespace _GAME_.Scripts
             set
             {
                 _experience = value;
-                onExperienceChanged?.Invoke();
+                OnExperienceChanged?.Invoke();
                 
                 while (_experience >= NeededExperience(_level))
                 {
-                    onLevelUp?.Invoke();
+                    OnLevelUp?.Invoke();
                     _experience -= NeededExperience(_level);
                     _level++;
                 }
             }
+        }
+
+        private float SavedExperience
+        {
+            get => ES3.Load("PlayerExperience",0f);
+            set => ES3.Save("PlayerExperience",value);
+        }
+        private int SavedLevel
+        {
+            get => ES3.Load("PlayerLevel",1);
+            set => ES3.Save("PlayerLevel",value);
+        }
+
+        public void Save()
+        {
+            SavedExperience = Experience;
+            SavedLevel = Level;
+        }
+        
+        public void Load()
+        {
+            Experience = SavedExperience;
+            Level = SavedLevel;
         }
         
         public void AddExperience(float experience)

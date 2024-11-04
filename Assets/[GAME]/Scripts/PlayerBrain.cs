@@ -32,10 +32,10 @@ namespace _GAME_.Scripts
                 return _stateMachine.ActiveStateName;
             }
         }
-        private StateMachine<EPlayerState,PlayerBrain> _stateMachine;
         internal PlayerTargeting Targeting;
         internal PhysicsBasedCharacterController CharacterController;
         internal PlayerInventory Inventory;
+        private StateMachine<EPlayerState,PlayerBrain> _stateMachine;
         private void Awake()
         {
             Application.targetFrameRate = 61;

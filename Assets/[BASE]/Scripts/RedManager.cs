@@ -30,8 +30,9 @@ namespace _BASE_.Scripts
         
         private void FindManagers()
         {
+            if(managers != null) return;
             managers = FindObjectsOfType<Manager>(true).ToList();
-            managers.Sort((a, b) => a.priority.CompareTo(b.priority));
+            // managers.Sort((a, b) => a.priority.CompareTo(b.priority));
         }
 
 #if UNITY_EDITOR

@@ -1,5 +1,4 @@
 using System;
-using _GAME_.Scripts.LevelSystem;
 using Sirenix.OdinInspector;
 
 namespace _GAME_.Scripts
@@ -10,7 +9,7 @@ namespace _GAME_.Scripts
         [ShowInInspector, BoxGroup("Debug")]
         public override float NeededExperience(int level)
         {
-            return GameSettings.Instance.GetNextLevelExperience(level);
+            return GameSettings.Instance.gameOptions.playerNextLevelExperience[level];
         }
     }
 }

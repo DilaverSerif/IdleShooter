@@ -823,6 +823,30 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
+--- !u!114 &384909506 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3524679716450944569, guid: 66786316b11044960bc50ce7df864049,
+    type: 3}
+  m_PrefabInstance: {fileID: 506056889}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40a346410c21478c84575e07eb158282, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &495477379 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2617328032546995181, guid: 66786316b11044960bc50ce7df864049,
+    type: 3}
+  m_PrefabInstance: {fileID: 506056889}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e333d746d5c942f9a532e396927c1df4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &506056889
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -834,7 +858,7 @@ PrefabInstance:
     - target: {fileID: 3524679716450944569, guid: 66786316b11044960bc50ce7df864049,
         type: 3}
       propertyPath: menuData.Array.size
-      value: 4
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 3524679716450944569, guid: 66786316b11044960bc50ce7df864049,
         type: 3}
@@ -844,12 +868,12 @@ PrefabInstance:
     - target: {fileID: 3524679716450944569, guid: 66786316b11044960bc50ce7df864049,
         type: 3}
       propertyPath: menuData.Array.data[1].guid
-      value: 1945ea87aa6b646dd86ffc236b1d05e2
+      value: 9e137dd7ad5179d45b26c5e0a929bbab
       objectReference: {fileID: 0}
     - target: {fileID: 3524679716450944569, guid: 66786316b11044960bc50ce7df864049,
         type: 3}
       propertyPath: menuData.Array.data[2].guid
-      value: 9e137dd7ad5179d45b26c5e0a929bbab
+      value: 7d4854b209bde4b76a29f6c6b1b51cde
       objectReference: {fileID: 0}
     - target: {fileID: 3524679716450944569, guid: 66786316b11044960bc50ce7df864049,
         type: 3}
@@ -866,13 +890,13 @@ PrefabInstance:
         type: 3}
       propertyPath: menuData.Array.data[1].asset
       value: 
-      objectReference: {fileID: 102900000, guid: 1945ea87aa6b646dd86ffc236b1d05e2,
+      objectReference: {fileID: 102900000, guid: 9e137dd7ad5179d45b26c5e0a929bbab,
         type: 3}
     - target: {fileID: 3524679716450944569, guid: 66786316b11044960bc50ce7df864049,
         type: 3}
       propertyPath: menuData.Array.data[2].asset
       value: 
-      objectReference: {fileID: 102900000, guid: 9e137dd7ad5179d45b26c5e0a929bbab,
+      objectReference: {fileID: 102900000, guid: 7d4854b209bde4b76a29f6c6b1b51cde,
         type: 3}
     - target: {fileID: 3524679716450944569, guid: 66786316b11044960bc50ce7df864049,
         type: 3}
@@ -961,6 +985,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: RED Manager
       objectReference: {fileID: 0}
+    - target: {fileID: 6734566697866566018, guid: 66786316b11044960bc50ce7df864049,
+        type: 3}
+      propertyPath: managers.Array.data[1]
+      value: 
+      objectReference: {fileID: 495477379}
+    - target: {fileID: 6734566697866566018, guid: 66786316b11044960bc50ce7df864049,
+        type: 3}
+      propertyPath: managers.Array.data[2]
+      value: 
+      objectReference: {fileID: 384909506}
     - target: {fileID: 7706044667409371070, guid: 66786316b11044960bc50ce7df864049,
         type: 3}
       propertyPath: m_LocalPosition.x

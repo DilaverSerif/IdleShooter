@@ -17,18 +17,18 @@ namespace _BASE_.Scripts
         {
             ES3.Save("PlayerSave", playerSave);
             foreach (var save in _saveData)
-            {
                 save.Save();
-            }
+            
+            playerSave.playerLevel.Save();
         }
 
         private void Load()
         {
             playerSave = ES3.Load("PlayerSave", new PlayerSave());
             foreach (var save in _saveData)
-            {
                 save.Load();
-            }
+            
+            playerSave.playerLevel.Load();
         }
         
         public void OnDisable()
