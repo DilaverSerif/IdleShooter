@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using _GAME_.Scripts;
+using Sirenix.OdinInspector;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace _BASE_.Scripts
 {
@@ -13,17 +13,21 @@ namespace _BASE_.Scripts
         public PlayerSave playerSave;
         private List<ISave> _saveData = new List<ISave>();
 
+        [Button]
         private void Save()
         {
+            Debug.Log("Game Saved");
             ES3.Save("PlayerSave", playerSave);
             foreach (var save in _saveData)
                 save.Save();
             
             playerSave.playerLevel.Save();
         }
-
+        
+        [Button]
         private void Load()
         {
+            Debug.Log("Game Loaded");
             playerSave = ES3.Load("PlayerSave", new PlayerSave());
             foreach (var save in _saveData)
                 save.Load();
